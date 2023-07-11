@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.5 FATAL_ERROR)
 
 project (pldm_intel)
 
-option (BUILD_STANDALONE "Use outside of YOCTO depedencies system" OFF)
+option (BUILD_STANDALONE "Use outside of YOCTO depedencies system" ON)
 
 set (BUILD_SHARED_LIBRARIES OFF)
 set (CMAKE_CXX_STANDARD 17)
@@ -78,6 +78,7 @@ set (TEST_FW_UPDATE tests/libpldm_fw_update_test.cpp firmware_update.c base.c ut
 set (TEST_PDR tests/libpldm_pdr_test.cpp pdr.c)
 set (TEST_PLATFORM tests/libpldm_platform_test.cpp platform.c base.c utils.c)
 set (TEST_UTILS tests/libpldm_utils_test.cpp utils.c)
+set (TEST_CERBERUS tests/libpldm_cerberus_test.cpp base.c utils.c)
 
 enable_testing ()
 
@@ -112,3 +113,8 @@ add_executable (libpldm_utils_test ${TEST_UTILS})
 target_link_libraries(libpldm_utils_test ${GTEST_LIBRARIES} -lpthread)
 add_test (libpldm_utils_test libpldm_utils_test
           "--gtest_output=xml:libpldm_utils_test.xml")
+
+add_executable (libpldm_cerberus_test ${TEST_CERBERUS})
+target_link_libraries(libpldm_cerberus_test ${GTEST_LIBRARIES} -lpthread)
+add_test (libpldm_cerberus_test libpldm_cerberus_test
+          "--gtest_output=xml:libpldm_cerberus_test.xml")
