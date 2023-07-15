@@ -6,6 +6,7 @@
 
 #include "../base.h"
 #include "../utils.h"
+#include "../socket_connect.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -27,6 +28,9 @@ TEST(MessagingControlRequest, testGetPLDMCommands) {
     EXPECT_EQ(0, memcmp(request->payload + sizeof(pldmType), &version,
                         sizeof(version)));
 
+    auto send = socket_connect(requestMsg.data(), requestMsg.size());
+    EXPECT_EQ(send, 0);
+
 }
 
 TEST(MessagingControlRequest, testGetPLDMVersion) {
@@ -43,6 +47,9 @@ TEST(MessagingControlRequest, testGetPLDMVersion) {
     EXPECT_EQ(0, memcmp(request->payload + sizeof(transferHandle), &opFlag, sizeof(opFlag)));
     EXPECT_EQ(0, memcmp(request->payload + sizeof(transferHandle) + sizeof(opFlag), 
         &pldmType, sizeof(pldmType)));
+    
+    auto send = socket_connect(requestMsg.data(), requestMsg.size());
+    EXPECT_EQ(send, 0);
 }
 
 TEST(MessagingControlRequest, testSetTID) {
@@ -53,6 +60,9 @@ TEST(MessagingControlRequest, testSetTID) {
     auto rc = encode_set_tid_req(0, tid, request);
     EXPECT_EQ(rc, PLDM_SUCCESS);
     EXPECT_EQ(0, memcmp(request->payload, &tid, sizeof(tid)));
+
+    auto send = socket_connect(requestMsg.data(), requestMsg.size());
+    EXPECT_EQ(send, 0);
 
 }
 

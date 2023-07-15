@@ -38,6 +38,7 @@ set (SRC_FILES ${PROJECT_SOURCE_DIR}/base.c
         ${PROJECT_SOURCE_DIR}/pdr.c
         ${PROJECT_SOURCE_DIR}/platform.c
         ${PROJECT_SOURCE_DIR}/utils.c
+        ${PROJECT_SOURCE_DIR}/socket_connect.c
 )
 
 set (HEADER_FILES ${PROJECT_SOURCE_DIR}/base.h
@@ -49,6 +50,7 @@ set (HEADER_FILES ${PROJECT_SOURCE_DIR}/base.h
         ${PROJECT_SOURCE_DIR}/pldm_types.h
         ${PROJECT_SOURCE_DIR}/state_set.h
         ${PROJECT_SOURCE_DIR}/utils.h
+        ${PROJECT_SOURCE_DIR}/socket_connect.h
 )
 
 if (BUILD_STANDALONE)
@@ -78,7 +80,7 @@ set (TEST_FW_UPDATE tests/libpldm_fw_update_test.cpp firmware_update.c base.c ut
 set (TEST_PDR tests/libpldm_pdr_test.cpp pdr.c)
 set (TEST_PLATFORM tests/libpldm_platform_test.cpp platform.c base.c utils.c)
 set (TEST_UTILS tests/libpldm_utils_test.cpp utils.c)
-set (TEST_CERBERUS tests/libpldm_cerberus_test.cpp base.c utils.c)
+set (TEST_CERBERUS tests/libpldm_cerberus_test.cpp base.c utils.c socket_connect.c)
 
 enable_testing ()
 
