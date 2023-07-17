@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "../base.h"
+#include "../platform.h"
 #include "../utils.h"
 #include "../socket_connect.h"
 
@@ -60,6 +61,38 @@ TEST(MessagingControlRequest, testSetTID) {
     auto rc = encode_set_tid_req(0, tid, request);
     EXPECT_EQ(rc, PLDM_SUCCESS);
     EXPECT_EQ(0, memcmp(request->payload, &tid, sizeof(tid)));
+
+    auto send = socket_connect(requestMsg.data(), requestMsg.size());
+    EXPECT_EQ(send, 0);
+
+}
+
+TEST(PlatformMonitoringControl, testSetStateEffecterStates) {
+    uint16_t effecterId = 0x0A;
+    uint8_t compEffecterCnt = 0x2;
+    std::array<set_effecter_state_field, 8> stateField{};
+    stateField[0] = {PLDM_REQUEST_SET, 2};
+    stateField[1] = {PLDM_REQUEST_SET, 3};
+
+    std::array<uint8_t, hdrSize + PLDM_SET_STATE_EFFECTER_STATES_REQ_BYTES> requestMsg{};
+    auto request = reinterpret_cast<pldm_msg*>(requestMsg.data());
+
+    auto rc = encode_set_state_effecter_states_req(0, effecterId, compEffecterCnt, stateField.data(), request);
+    EXPECT_EQ(rc, PLDM_SUCCESS);
+    EXPECT_EQ(effecterId, request->payload[0]);
+    EXPECT_EQ(compEffecterCnt, request->payload[sizeof(effecterId)]);
+    EXPECT_EQ(stateField[0].set_request,
+              request->payload[sizeof(effecterId) + sizeof(compEffecterCnt)]);
+    EXPECT_EQ(stateField[0].effecter_state,
+              request->payload[sizeof(effecterId) + sizeof(compEffecterCnt) +
+                               sizeof(stateField[0].set_request)]);
+    EXPECT_EQ(stateField[1].set_request,
+              request->payload[sizeof(effecterId) + sizeof(compEffecterCnt) +
+                               sizeof(stateField[0])]);
+    EXPECT_EQ(stateField[1].effecter_state,
+              request->payload[sizeof(effecterId) + sizeof(compEffecterCnt) +
+                               sizeof(stateField[0]) +
+                               sizeof(stateField[1].set_request)]);
 
     auto send = socket_connect(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);

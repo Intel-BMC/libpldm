@@ -80,7 +80,7 @@ set (TEST_FW_UPDATE tests/libpldm_fw_update_test.cpp firmware_update.c base.c ut
 set (TEST_PDR tests/libpldm_pdr_test.cpp pdr.c)
 set (TEST_PLATFORM tests/libpldm_platform_test.cpp platform.c base.c utils.c)
 set (TEST_UTILS tests/libpldm_utils_test.cpp utils.c)
-set (TEST_CERBERUS tests/libpldm_cerberus_test.cpp base.c utils.c socket_connect.c)
+set (TEST_CERBERUS tests/libpldm_cerberus_test.cpp base.c platform.c utils.c socket_connect.c)
 
 enable_testing ()
 
