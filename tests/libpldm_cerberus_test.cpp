@@ -16,6 +16,19 @@ using testing::ElementsAreArray;
 
 constexpr auto hdrSize = sizeof(pldm_msg_hdr);
 
+class SocketEnvironment : public ::testing::Environment {
+    public:
+        ~SocketEnvironment() override {}
+
+        void SetUp() override {
+            ASSERT_EQ(initialize_socket_connection(), 0);
+        }
+
+        void TearDown() override {
+            ASSERT_EQ(close_socket_connection(), 0);
+        }
+};
+
 TEST(MessagingControlRequest, testGetPLDMCommands) {
     uint8_t pldmType = PLDM_FWUP;
     ver32_t version{0xFF, 0xFF, 0xFF, 0xFF};
@@ -29,7 +42,7 @@ TEST(MessagingControlRequest, testGetPLDMCommands) {
     EXPECT_EQ(0, memcmp(request->payload + sizeof(pldmType), &version,
                         sizeof(version)));
 
-    auto send = socket_connect(requestMsg.data(), requestMsg.size());
+    auto send = socket_send_pldm_message(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);
 
 }
@@ -49,7 +62,7 @@ TEST(MessagingControlRequest, testGetPLDMVersion) {
     EXPECT_EQ(0, memcmp(request->payload + sizeof(transferHandle) + sizeof(opFlag), 
         &pldmType, sizeof(pldmType)));
     
-    auto send = socket_connect(requestMsg.data(), requestMsg.size());
+    auto send = socket_send_pldm_message(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);
 }
 
@@ -62,7 +75,7 @@ TEST(MessagingControlRequest, testSetTID) {
     EXPECT_EQ(rc, PLDM_SUCCESS);
     EXPECT_EQ(0, memcmp(request->payload, &tid, sizeof(tid)));
 
-    auto send = socket_connect(requestMsg.data(), requestMsg.size());
+    auto send = socket_send_pldm_message(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);
 
 }
@@ -94,14 +107,16 @@ TEST(PlatformMonitoringControl, testSetStateEffecterStates) {
                                sizeof(stateField[0]) +
                                sizeof(stateField[1].set_request)]);
 
-    auto send = socket_connect(requestMsg.data(), requestMsg.size());
+    auto send = socket_send_pldm_message(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);
 
 }
 
 
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
+    ::testing::AddGlobalTestEnvironment(new SocketEnvironment);
     return RUN_ALL_TESTS();
 }

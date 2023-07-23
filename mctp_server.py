@@ -3,25 +3,31 @@ import socket
 HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 PORT = 5600  # Port to listen on (non-privileged ports are > 1023)
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((HOST, PORT))
-s.listen()
+soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+soc.bind((HOST, PORT))
+soc.listen()
 
-print("Starting the server... \n")
+print("Starting the server...\n")
 try:
+    conn, addr = soc.accept()
+
     while True:
-        conn, addr = s.accept()
-        data = conn.recv(32)
+        data = conn.recv(64)
+
+        if not data:
+            break
+
         #binary_data = ''.join(format(byte, '08b') for byte in data)
         binary_data = [bin(byte)[2:].zfill(8) for byte in data]
+
         print(binary_data)
         print(len(data))
-        print("\n")
+    
+    conn.close()
 
-        conn.close()
 
 except KeyboardInterrupt:
-    print("Terminating the server...")
+    print("\nTerminating the server...")
 
 finally:
-    s.close()
+    soc.close()
