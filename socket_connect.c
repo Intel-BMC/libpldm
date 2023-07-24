@@ -55,6 +55,7 @@ int socket_send_pldm_message(const uint8_t* data, size_t data_length) {
         return EXIT_FAILURE;
     }
 
+
     return 0;
 }
 

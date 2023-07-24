@@ -3,6 +3,7 @@
 #include <array>
 #include <cstring>
 #include <vector>
+#include <unistd.h>
 
 #include "../base.h"
 #include "../platform.h"
@@ -44,6 +45,8 @@ TEST(MessagingControlRequest, testGetPLDMCommands) {
 
     auto send = socket_send_pldm_message(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);
+   
+   fflush(stdout);
 
 }
 
@@ -64,6 +67,9 @@ TEST(MessagingControlRequest, testGetPLDMVersion) {
     
     auto send = socket_send_pldm_message(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);
+
+    fflush(stdout);
+    
 }
 
 TEST(MessagingControlRequest, testSetTID) {
@@ -77,6 +83,9 @@ TEST(MessagingControlRequest, testSetTID) {
 
     auto send = socket_send_pldm_message(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);
+
+    fflush(stdout);
+    
 
 }
 
@@ -109,7 +118,8 @@ TEST(PlatformMonitoringControl, testSetStateEffecterStates) {
 
     auto send = socket_send_pldm_message(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);
-
+    
+    fflush(stdout);
 }
 
 
