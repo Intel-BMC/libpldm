@@ -8,23 +8,20 @@ soc.bind((HOST, PORT))
 soc.listen()
 
 print("Starting the server...\n")
-try:
-    conn, addr = soc.accept()
 
+try:
     while True:
+        conn, addr = soc.accept()
+
         data = conn.recv(64)
 
-        if not data:
-            break
+        if data:
+            binary_data = ''.join(format(byte, '08b') for byte in data)
+            #binary_data = [bin(byte)[2:].zfill(8) for byte in data]
+            print(binary_data)
+            print(len(data))
 
-        #binary_data = ''.join(format(byte, '08b') for byte in data)
-        binary_data = [bin(byte)[2:].zfill(8) for byte in data]
-
-        print(binary_data)
-        print(len(data))
-    
-    conn.close()
-
+        conn.close()
 
 except KeyboardInterrupt:
     print("\nTerminating the server...")

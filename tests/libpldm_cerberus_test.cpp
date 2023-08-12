@@ -16,7 +16,7 @@
 using testing::ElementsAreArray;
 
 constexpr auto hdrSize = sizeof(pldm_msg_hdr);
-
+/*
 class SocketEnvironment : public ::testing::Environment {
     public:
         ~SocketEnvironment() override {}
@@ -28,7 +28,7 @@ class SocketEnvironment : public ::testing::Environment {
         void TearDown() override {
             ASSERT_EQ(close_socket_connection(), 0);
         }
-};
+};*/
 
 TEST(MessagingControlRequest, testGetPLDMCommands) {
     uint8_t pldmType = PLDM_FWUP;
@@ -46,7 +46,7 @@ TEST(MessagingControlRequest, testGetPLDMCommands) {
     auto send = socket_send_pldm_message(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);
    
-   fflush(stdout);
+ 
 
 }
 
@@ -68,7 +68,7 @@ TEST(MessagingControlRequest, testGetPLDMVersion) {
     auto send = socket_send_pldm_message(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);
 
-    fflush(stdout);
+    
     
 }
 
@@ -84,7 +84,7 @@ TEST(MessagingControlRequest, testSetTID) {
     auto send = socket_send_pldm_message(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);
 
-    fflush(stdout);
+    
     
 
 }
@@ -119,7 +119,7 @@ TEST(PlatformMonitoringControl, testSetStateEffecterStates) {
     auto send = socket_send_pldm_message(requestMsg.data(), requestMsg.size());
     EXPECT_EQ(send, 0);
     
-    fflush(stdout);
+  
 }
 
 
@@ -127,6 +127,6 @@ TEST(PlatformMonitoringControl, testSetStateEffecterStates) {
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
-    ::testing::AddGlobalTestEnvironment(new SocketEnvironment);
+    //::testing::AddGlobalTestEnvironment(new SocketEnvironment);
     return RUN_ALL_TESTS();
 }
