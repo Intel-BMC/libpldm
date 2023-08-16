@@ -12,16 +12,22 @@ print("Starting the server...\n")
 try:
     while True:
         conn, addr = soc.accept()
+        print("Connected by", addr)
 
-        data = conn.recv(64)
+        data = conn.recv(1024)  
+        binary = ''.join(format(byte, '08b') for byte in data)
 
         if data:
-            binary_data = ''.join(format(byte, '08b') for byte in data)
-            #binary_data = [bin(byte)[2:].zfill(8) for byte in data]
-            print(binary_data)
-            print(len(data))
+            print(f"Received data of size {len(data)} bytes:\n{binary}")
+            conn.close()  
 
-        conn.close()
+                
+            new_conn, new_addr = soc.accept()
+            print("Connected by", new_addr)
+
+            new_conn.sendall(data)  
+            new_conn.close()
+            print("Sent data back and closed connection")
 
 except KeyboardInterrupt:
     print("\nTerminating the server...")
